@@ -13,6 +13,7 @@ const MailListItems = (props) => {
     e.stopPropagation();
     dispatch(setChecked({ id: mail.id, mail: "single" }));
   };
+
   const onClickHandler = async () => {
     dispatch(setChecked({ id: null, mail: "none" }));
     try {
@@ -29,6 +30,7 @@ const MailListItems = (props) => {
           },
         }
       );
+
       const data = response.data;
       if (response.status === 200) {
         dispatch(setRead({ id: mail.id }));
@@ -43,7 +45,7 @@ const MailListItems = (props) => {
     <ListGroup.Item
       action
       as={Link}
-      to={`/welcome/inbox/${mail.id}`}
+      to={`/home/${mail.id}`}
       className={`border-bottom ${
         mail.isChecked ? "bg-success bg-opacity-25" : ""
       }`}
@@ -77,7 +79,7 @@ const MailListItems = (props) => {
           <div>
             <span className="fw-bold">{mail.subject}</span>
             <span className="ps-2">
-              The time has come for us to sunset this Slack community and...
+              {mail.emailContent.blocks[0].text}
             </span>
           </div>
         </Col>

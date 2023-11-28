@@ -10,7 +10,7 @@ const mailSlice = createSlice({
   initialState: initialMailBoxState,
   reducers: {
     addToInbox: (state, action) => {
-      state.mails.push(action.payload);
+      state.mails = action.payload;
     },
 
     setChecked: (state, action) => {

@@ -33,8 +33,8 @@ const Auth = () => {
         try {
           e.preventDefault();
           dispatch(setIsLoading(true));
-          const enteredEmail = emailRef.current.value;
-          const enteredPassword = passwordRef.current.value;
+          const enteredEmail = emailRef.current.value.trim();
+          const enteredPassword = passwordRef.current.value.trim();
     
           if (!signIn) {
             const enteredConfirmPassword = confirmPasswordRef.current.value;

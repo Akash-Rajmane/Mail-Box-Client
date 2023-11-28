@@ -57,7 +57,7 @@ const Inbox = () => {
   );
 
   return (
-    <>
+    <div style={{width:"calc(100% - 350px)", left:"300px",top:"0", position:"fixed"}}>
       <div className="border-bottom d-flex align-items-center pt-3 pb-2 px-3">
         <SplitButton
           variant={"light"}
@@ -120,7 +120,7 @@ const Inbox = () => {
           ))}
         </ListGroup>
       )}
-    </>
+    </div>
   );
 };
 

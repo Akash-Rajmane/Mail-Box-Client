@@ -26,7 +26,14 @@ const authSlice = createSlice({
       state.email = email;
     },
     
-    logout: (state, action) => {},
+    logout: (state) => {
+      localStorage.removeItem("idToken");
+      localStorage.removeItem("email");
+      localStorage.removeItem("isAuthenticated");
+      state.isAuthenticated = false;
+      state.idToken = "";
+      state.email = "";
+    },
     
     showNotification: (state, action) => {
       state.notification = {

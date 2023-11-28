@@ -35,6 +35,8 @@ const MailboxEditor = () => {
       subject: subject,
       emailContent: editorContent,
       sender: mailSender,
+      isChecked: false,
+      hasRead: false,
     };
 
     try {
@@ -62,9 +64,9 @@ const MailboxEditor = () => {
   };
 
   return (
-    <Container>
+    <Container style={{width:"calc(100% - 350px)", left:"300px",top:"0", position:"fixed"}}>
       {message && <Notification message={message} />}
-      <Form onSubmit={onSubmitHandler} className="p-3">
+      <Form onSubmit={onSubmitHandler} className="p-3 mt-3">
         <InputGroup className="mb-3">
           <InputGroup.Text id="basic-addon1">To</InputGroup.Text>
           <Form.Control
