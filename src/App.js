@@ -1,10 +1,15 @@
 import './App.css';
-import SignUp from './components/SignUp';
+import Auth from './components/Auth';
+import Home from "./pages/Home";
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
     <div className="App">
-      <SignUp/>
+      <Routes>
+        <Route path="/" element={<Auth/>}/>
+        <Route path="/home" element={<Home/>}/>
+      </Routes>
     </div>
   );
 }
