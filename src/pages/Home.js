@@ -1,8 +1,11 @@
 import React from 'react';
+import MailboxEditor from '../components/Mailbox/MailboxEditor';
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <div>
+        <MailboxEditor/>
+    </div>
   )
 }
 
