@@ -16,7 +16,9 @@ const Sidbar = () => {
   const [show, setShow] = useState(false);
   const mails = useSelector((state) => state.mail.mails);
   const email = useSelector((state) => state.auth.email);
-  const filteredMails = mails.filter((mail) => mail.recipient === email);
+  const filteredMails = mails.filter(
+    (mail) => mail.recipient === email && mail.trashed === false
+  );
   let unread = 0;
 
   filteredMails.forEach((mail) => {
@@ -63,9 +65,9 @@ const Sidbar = () => {
                           <i className="fs-4 pe-2 bi bi-envelope-fill"></i>{" "}
                           Inbox
                         </span>
-                        <span className="ps-2 mx-auto">
+                        <span className="pt-2 pe-2 position-relative mx-auto">
                           unread
-                          <span className="ps-1 text-warning">
+                          <span className="ps-1 position-absolute top-0 end-0 text-warning">
                             {unread}
                           </span>{" "}
                         </span>

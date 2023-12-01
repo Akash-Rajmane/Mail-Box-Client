@@ -9,6 +9,7 @@ import Inbox from "./components/Mailbox/Inbox";
 import Message from "./components/Mailbox/Message";
 import MailboxEditor from "./components/Mailbox/MailboxEditor";
 import Sidbar from './components/Sidbar';
+import Trash from "./components/Mailbox/Trash"
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           }
         );
         const data = response.data;
+        
         if (response.status === 200) {
           let arr = [];
           for (const key in data) {
@@ -55,7 +57,7 @@ function App() {
         <Route path="/mailboxeditor" element ={ <MailboxEditor />}/> 
         <Route path="/home/:messageId" element={ <Message />}/>
         <Route path="/home" element={<Inbox/>} />
-        <Route path="/trash"></Route>
+        <Route path="/trash" element={<Trash/>}/>
         <Route path="/sent"></Route>
       </Routes>
     </div>
