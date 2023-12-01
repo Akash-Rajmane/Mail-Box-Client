@@ -84,7 +84,12 @@ const Trash = () => {
       <div className="border-bottom d-flex align-items-center py-2 px-1">
         <Selector filteredMails={filteredMails} />
         <div className="ms-auto mx-lg-auto">
-          <Button size="sm" variant="secondary" className="border-0 me-3">
+          <Button
+            disabled={filteredMails.length === 0}
+            size="sm"
+            variant="secondary"
+            className="border-0 me-3"
+          >
             Empty Trash Now
           </Button>
           <Button

@@ -6,6 +6,7 @@ import { EditorState, convertToRaw } from "draft-js";
 import { useSelector, useDispatch } from "react-redux";
 import Notification from "../UI/Notification";
 import { showNotification } from "../../store/authSlice";
+import { addToSentBox } from "../../store/sentMailsSlice";
 import axios from "axios";
 
 const MailboxEditor = () => {
@@ -38,7 +39,7 @@ const MailboxEditor = () => {
       trashed: false,
       starred: false,
     };
-    const { recipient, subject, emailContent, sender } = emailInfo;
+   
     try {
       const url1 =
         "https://mail-box-client-46880-default-rtdb.firebaseio.com/emails.json";
@@ -46,31 +47,24 @@ const MailboxEditor = () => {
 
       const requests = [
         axios.post(url1, emailInfo),
-        axios.post(url2, {
-          recipient,
-          subject,
-          emailContent,
-          sender,
-        }),
+        axios.post(url2, emailInfo),
       ];
 
       const responses = await Promise.all(requests);
       const [response1, response2] = responses;
       const { status: status1 } = response1;
-      const { status: status2 } = response2;
+      const { data, status: status2 } = response2;
 
       if (status1 === 200 && status2 === 200) {
         dispatch(showNotification({ message: "Sent", variant: "success" }));
-        dispatch();
+        const mailItem = {
+          id: data.name,
+          isChecked: false,
+          ...emailInfo,
+        };
+        dispatch(addToSentBox(mailItem));
       }
-      //   dispatch(showNotification({ message: "Sent", variant: "success" }));
-      //   dispatch();
-
-      //   const data = response.data;
-      //   if (response.status === 200) {
-      //     console.log(data);
-      //     dispatch(showNotification({ message: "Sent", variant: "success" }));
-      //   }
+     
     } catch (error) {
       console.log(error.message);
     } finally {

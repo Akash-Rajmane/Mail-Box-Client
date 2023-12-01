@@ -8,7 +8,7 @@ import { useState } from "react";
 const MailListItems = (props) => {
   const { mail } = props;
   const location = useLocation();
-
+  
   const dispatch = useDispatch();
 
   const onCheckHandler = () => {
@@ -16,6 +16,16 @@ const MailListItems = (props) => {
   };
 
   const [isHovered, setIsHovered] = useState(false);
+
+  const [starHovered, setStarHovered] = useState(false);
+  
+  const starMouseEnter = () => {
+    setStarHovered(true);
+  };
+  
+  const starMouseLeave = () => {
+    setStarHovered(false);
+  };
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -86,8 +96,12 @@ const MailListItems = (props) => {
       action
       as={Link}
       to={ location.pathname === "/home"
-      ? `/home/${mail.id}`
-      : `/trash/${mail.id}`}
+      ? `/home/${mail.id}` 
+      : location.pathname === "/trash" 
+      ? `/trash/${mail.id}`
+      : location.pathname === "/sent"
+      ? `/sent/${mail.id}`
+      :`starred/${mail.id}`}
       className={`mb-1 border-bottom ${
         mail.isChecked ? "bg-success bg-opacity-25" : ""
       } ${isHovered ? "shadow-sm" : ""}`}
@@ -108,13 +122,21 @@ const MailListItems = (props) => {
             <div className="" style={{ cursor: "auto" }}>
               {mail.starred ? (
                 <i
-                  className="bi bi-star-fill text-warning px-1 ms-2 bg-secondary rounded bg-opacity-10  "
+                className={`bi bi-star-fill text-warning px-1 ms-2 ${
+                  starHovered ? "bg-secondary rounded bg-opacity-10" : ""
+                }`}
                   onClick={starClickHandler}
+                  onMouseEnter={starMouseEnter}
+                  onMouseLeave={starMouseLeave}
                 />
               ) : (
                 <i
-                  className="bi bi-star px-1 ms-2 bg-secondary rounded bg-opacity-10  "
+                className={`bi bi-star  px-1 ms-2 ${
+                  starHovered ? "bg-secondary rounded bg-opacity-10" : ""
+                }`}
                   onClick={starClickHandler}
+                  onMouseEnter={starMouseEnter}
+                  onMouseLeave={starMouseLeave}
                 />
               )}
             </div>
@@ -133,7 +155,7 @@ const MailListItems = (props) => {
           <div>
             <span className="fw-bold">{mail.subject}</span>
             <span className="ps-2">
-              The time has come for us to sunset this Slack community and...
+              {mail.emailContent?.blocks[0].text}
             </span>
           </div>
         </Col>

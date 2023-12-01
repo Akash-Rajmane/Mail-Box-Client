@@ -1,49 +1,51 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialMailBoxState = {
-  mails: [],
-  isLoading: false,
+const initialSentboxState = {
+  sentMails: [],
 };
 
-const mailSlice = createSlice({
-  name: "mail",
-  initialState: initialMailBoxState,
+const sentMailsSlice = createSlice({
+  name: "sentMails",
+  initialState: initialSentboxState,
   reducers: {
-    
-    addToInbox: (state, action) => {
-      state.mails = action.payload;
+    addToSentBox: (state, action) => {
+      state.sentMails.push(action.payload);
     },
-
-    setChecked: (state, action) => {
+    
+    clearSentBox: (state) => {
+      state.sentMails = [];
+    },
+    
+    setCheckedSent: (state, action) => {
       const { id, selector } = action.payload;
 
       if (selector === "single") {
-        const mailItem = state.mails.find((item) => item.id === id);
+        const mailItem = state.sentMails.find((item) => item.id === id);
         mailItem.isChecked = !mailItem.isChecked;
       } else if (selector === "all") {
-        const checked = state.mails.some((item) => item.isChecked === false);
-        state.mails = state.mails.map((mail) => {
+        const checked = state.sentMails.some((item) => item.isChecked === false);
+        state.sentMails = state.sentMails.map((mail) => {
           return {
             ...mail,
             isChecked: checked ? true : false,
           };
         });
       } else if (selector === "allMark" || selector === "none") {
-        state.mails = state.mails.map((mail) => {
+        state.sentMails = state.sentMails.map((mail) => {
           return {
             ...mail,
             isChecked: selector === "allMark",
           };
         });
       } else if (selector === "read" || selector === "unread") {
-        state.mails = state.mails.map((mail) => {
+        state.sentMails = state.sentMails.map((mail) => {
           return {
             ...mail,
             isChecked: mail.hasRead === (selector === "read"),
           };
         });
       } else if (selector === "starred" || selector === "unstarred") {
-        state.mails = state.mails.map((mail) => {
+        state.sentMails = state.sentMails.map((mail) => {
           return {
             ...mail,
             isChecked: mail.starred === (selector === "starred"),
@@ -52,8 +54,8 @@ const mailSlice = createSlice({
       }
     },
     
-    moveMails: (state, action) => {
-      state.mails = state.mails.map((mail) => {
+    moveMailsSent: (state, action) => {
+      state.sentMails = state.sentMails.map((mail) => {
         if (mail.isChecked) {
           return {
             ...mail,
@@ -64,8 +66,8 @@ const mailSlice = createSlice({
       });
     },
     
-    moveToTrash: (state, action) => {
-      state.mails = state.mails.map((mail) => {
+    moveToTrashSent: (state, action) => {
+      state.sentMails = state.sentMails.map((mail) => {
         if (mail.id === action.payload) {
           return {
             ...mail,
@@ -76,43 +78,24 @@ const mailSlice = createSlice({
       });
     },
     
-    setRead: (state, action) => {
+    setReadSent: (state, action) => {
       const { id } = action.payload;
-      const mailItem = state.mails.find((mail) => mail.id === id);
+      const mailItem = state.sentMails.find((mail) => mail.id === id);
       mailItem.hasRead = true;
     },
     
-    toggleStarred: (state, action) => {
+    toggleStarredSent: (state, action) => {
       const { id } = action.payload;
-      const mailItem = state.mails.find((mail) => mail.id === id);
+      const mailItem = state.sentMails.find((mail) => mail.id === id);
       mailItem.starred = !mailItem.starred;
     },
     
-    clearInbox: (state) => {
-      state.mails = [];
-    },
-    
-    setMailsLoading: (state, action) => {
-      state.isLoading = action.payload;
-    },
-    
-    deleteForever: (state, action) => {
+    deleteForeverSent: (state, action) => {
       const { id } = action.payload;
-      state.mails = state.mails.filter((mail) => mail.id !== id);
+      state.sentMails = state.sentMails.filter((mail) => mail.id !== id);
     },
   },
 });
 
-export const {
-  addToInbox,
-  setChecked,
-  moveMails,
-  setRead,
-  clearInbox,
-  setMailsLoading,
-  moveToTrash,
-  toggleStarred,
-  deleteForever,
-} = mailSlice.actions;
-
-export default mailSlice.reducer;
+export const { addToSentBox, clearSentBox, setReadSent, setCheckedSent, moveToTrashSent, toggleStarredSent, deleteForeverSent, moveMailsSent } = sentMailsSlice.actions;
+export default sentMailsSlice.reducer;
