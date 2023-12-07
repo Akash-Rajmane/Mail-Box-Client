@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import './App.css';
 import Auth from './components/Auth';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { addToInbox, clearInbox, setMailsLoading } from "./store/mailSlice";
-import { addToSentBox, clearSentBox } from "./store/sentMailsSlice";
+import { addToInbox, setMailsLoading } from "./store/mailSlice";
+import { addToSentBox } from "./store/sentMailsSlice";
 import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux';
 import Inbox from "./components/Mailbox/Inbox";
@@ -17,20 +17,25 @@ import Sent from './components/Mailbox/Sent';
 function App() {
   const location = useLocation();
   const dispatch = useDispatch();
-  //const auth = useSelector((state) => state.auth.isAuthenticated);
+  const auth = useSelector((state) => state.auth.isAuthenticated);
   const recipientMail = useSelector((state) => state.auth.email);
-  const email = recipientMail.replace(/[.]/g, "");
-
-
+  const mails = useSelector((state) => state.mail.mails);
+  let email;
+  
+  if(auth){
+    email = recipientMail.replace(/[.]/g, "");
+  }
+  
+  const url1 = "https://mail-box-client-46880-default-rtdb.firebaseio.com/emails.json";
+  
+  const url2 = `https://mail-box-client-46880-default-rtdb.firebaseio.com/sent-emails/${email}.json`;
+  
   useEffect(() => {
     dispatch(setMailsLoading(true));
 
     const getEmails = async () => {
       try {
-        const url1 =
-          "https://mail-box-client-46880-default-rtdb.firebaseio.com/emails.json";
-        const url2 = `https://mail-box-client-46880-default-rtdb.firebaseio.com/sent-emails/${email}.json`;
-
+  
         const requests = [axios.get(url1), axios.get(url2)];
 
         const responses = await Promise.all(requests);
@@ -57,8 +62,7 @@ function App() {
               isChecked: false,
               ...sentMails[key],
             };
-            dispatch(addToSentBox(sentMailItem));
-            
+            dispatch(addToSentBox(sentMailItem)); 
           }
          
         }
@@ -72,11 +76,49 @@ function App() {
       getEmails();
     }
 
-    return () => {
-      dispatch(clearInbox());
-      dispatch(clearSentBox());
+  }, [email, dispatch, recipientMail,url2]);
+
+
+  useEffect(() => {
+    const getEmails = async () => {
+      try {
+        const response = await axios.get(url1);
+        const data = response.data;
+
+        const arr = [];
+        if (response.status === 200) {
+          for (const key in data) {
+            const mailItem = {
+              id: key,
+              isChecked: false,
+              ...data[key],
+            };
+            if (mailItem.recipient === recipientMail) {
+              arr.push(mailItem);
+            }
+          }
+        }
+        arr.forEach((mail) => {
+          if (!mails.some((email) => email.id === mail.id)) {
+            dispatch(addToInbox(arr));
+          }
+        });
+      } catch (e) {
+        console.log(e.message);
+      } finally {
+      }
     };
-  }, [email, dispatch, recipientMail]);
+
+    const interval = setInterval(() => {
+      if (recipientMail) {
+        getEmails();
+      }
+    }, 2000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [dispatch, recipientMail, mails]);
 
   return (
     <div className="App">

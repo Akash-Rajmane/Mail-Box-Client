@@ -18,9 +18,12 @@ const MailboxEditor = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  
   const handleEditorStateChange = (newEditorState) => {
     setEditorState(newEditorState);
   };
+
+  
 
   const onSubmitHandler = async (e) => {
     setIsLoading(true);
