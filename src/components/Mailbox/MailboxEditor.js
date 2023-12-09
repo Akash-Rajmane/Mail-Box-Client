@@ -59,6 +59,8 @@ const MailboxEditor = () => {
       const { data, status: status2 } = response2;
 
       if (status1 === 200 && status2 === 200) {
+        toRef.current.value = "";
+        subjectRef.current.value = "";
         dispatch(showNotification({ message: "Sent", variant: "success" }));
         const mailItem = {
           id: data.name,
