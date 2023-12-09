@@ -2,6 +2,7 @@ import { ListGroup, Row, Col, Form } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setRead, toggleStarred, setChecked } from "../../store/mailSlice";
+
 import axios from "axios";
 import { useState } from "react";
 
@@ -91,6 +92,12 @@ const MailListItems = (props) => {
   };
 
 
+  const sentOnClickHandler = () => {
+   
+  }
+
+
+
   return (
     <ListGroup.Item
       action
@@ -115,8 +122,8 @@ const MailListItems = (props) => {
             <Form>
               <Form.Check
                 checked={mail.isChecked}
-                onChange={onCheckHandler}
-                onClick={(e) => e.stopPropagation()}
+                onChange={location.pathname === "/sent" ? sentOnClickHandler:onCheckHandler}
+                onClick={(e) => e.stopPropagation()} 
               />
             </Form>
             <div className="" style={{ cursor: "auto" }}>
@@ -146,6 +153,8 @@ const MailListItems = (props) => {
                 className={`bi ${
                   mail.hasRead ? "invisible" : ""
                 } bi-record-fill text-primary pe-1`}
+
+                style={{ display: location.pathname === "/sent" ? "none" : "" }}
               ></i>
               {mail.sender}
             </p>

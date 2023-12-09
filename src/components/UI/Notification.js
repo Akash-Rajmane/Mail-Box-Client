@@ -9,7 +9,7 @@ const Notification = (props) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       dispatch(showNotification({ message: null, variant: null }));
-    }, 3000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [dispatch]);

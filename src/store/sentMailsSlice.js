@@ -9,7 +9,9 @@ const sentMailsSlice = createSlice({
   initialState: initialSentboxState,
   reducers: {
     addToSentBox: (state, action) => {
-      state.sentMails.push(action.payload);
+      if(!state.sentMails.some(el=>el.id===action.payload.id)){
+        state.sentMails.push(action.payload);
+      }
     },
     
     clearSentBox: (state) => {
@@ -82,6 +84,7 @@ const sentMailsSlice = createSlice({
       const { id } = action.payload;
       const mailItem = state.sentMails.find((mail) => mail.id === id);
       mailItem.hasRead = true;
+      
     },
     
     toggleStarredSent: (state, action) => {

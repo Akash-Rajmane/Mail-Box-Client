@@ -22,8 +22,8 @@ const Inbox = () => {
   let filteredMails = mails.filter(
     (mail) => mail.recipient === email && mail.trashed === false
   );
-
-  console.log(mails.map(mail=>mail));
+  
+  console.log(mails);
 
   const isDeleteEnabled = filteredMails.some((item) => item.isChecked);
 

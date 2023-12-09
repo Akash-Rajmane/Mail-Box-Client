@@ -44,7 +44,7 @@ function App() {
         const { data: sentMails, status: status2 } = response2;
 
         if (status1 === 200 && status2 === 200) {
-          let arr1 = [];
+          
           for (const key in receivedMails) {
             const mailItem = {
               id: key,
@@ -52,10 +52,10 @@ function App() {
               ...receivedMails[key],
             };
             if (mailItem.recipient === recipientMail) {
-              arr1.push(mailItem);
+              dispatch(addToInbox(mailItem));
             }
           }
-          dispatch(addToInbox(arr1));
+          
           for (const key in sentMails) {
             const sentMailItem = {
               id: key,
@@ -100,7 +100,7 @@ function App() {
         }
         arr.forEach((mail) => {
           if (!mails.some((email) => email.id === mail.id)) {
-            dispatch(addToInbox(arr));
+            dispatch(addToInbox(mail));
           }
         });
       } catch (e) {

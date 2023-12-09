@@ -6,13 +6,14 @@ import { setChecked } from "../../store/mailSlice";
 import { useEffect } from "react";
 import axios from "axios";
 import { showNotification } from "../../store/authSlice";
-import { moveMails } from "../../store/mailSlice";
+import { moveMails, emptyTrash  } from "../../store/mailSlice";
 import Notification from "../UI/Notification";
 import LoadingSpinner from "../UI/LoadingSpinner";
 
 const Trash = () => {
   const email = useSelector((state) => state.auth.email);
   const mails = useSelector((state) => state.mail.mails);
+  const senderMail = email.replace(/[.]/g, "");
   const dispatch = useDispatch();
 
   const isLoading = useSelector((state) => state.mail.isLoading);
@@ -23,6 +24,9 @@ const Trash = () => {
   );
 
   const isDeleteEnabled = filteredMails.some((item) => item.isChecked);
+
+  const url1 = `https://mail-box-client-46880-default-rtdb.firebaseio.com/emails`;
+  const url2 = `https://mail-box-client-46880-default-rtdb.firebaseio.com/sent-emails/${senderMail}`;
 
   const onRestoreHandler = async () => {
     try {
@@ -53,6 +57,30 @@ const Trash = () => {
       );
       dispatch(moveMails("toInbox"));
       console.log(responses);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const emptyTrashHandler = async () => {
+    try {
+      const updatedPromises = filteredMails.map((mail) =>
+        axios.delete(
+          mail.sender === email
+            ? `${url2}/${mail.id}.json`
+            : `${url1}/${mail.id}.json`
+        )
+      );
+      await Promise.all(updatedPromises);
+
+      dispatch(emptyTrash());
+     
+      dispatch(
+        showNotification({
+          message: "Trash is cleared",
+          variant: "success",
+        })
+      );
     } catch (error) {
       console.log(error.message);
     }
@@ -89,6 +117,7 @@ const Trash = () => {
             size="sm"
             variant="secondary"
             className="border-0 me-3"
+            onClick={emptyTrashHandler}
           >
             Empty Trash Now
           </Button>

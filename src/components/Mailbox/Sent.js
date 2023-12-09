@@ -1,5 +1,5 @@
 import Selector from "../Mailbox/Selector";
-import { Button, ListGroup } from "react-bootstrap";
+import { ListGroup } from "react-bootstrap";
 import LoadingSpinner from "../UI/LoadingSpinner";
 import MailListItems from "../Mailbox/MailListItems";
 import { useSelector } from "react-redux";
@@ -10,7 +10,9 @@ const Sent = () => {
   const isLoading = useSelector((state) => state.mail.isLoading);
 
   const isDeleteEnabled = sentMails.length === 0;
-
+  const filteredMails = [...sentMails].filter(
+    (mail) => mail.trashed === true
+  );
 
   const content = (
     <div className="text-center mt-5">
@@ -26,16 +28,8 @@ const Sent = () => {
   return (
     <div style={{width:"calc(100% - 350px)", left:"300px",top:"0", position:"fixed"}}>
       <div className="border-bottom d-flex align-items-center py-2 px-1">
-        <Selector filteredMails={sentMails} />
-        <div className="ms-auto mx-lg-auto">
-          <Button
-            disabled={isDeleteEnabled}
-            variant="secondary"
-            className="border-0 me-3"
-          >
-            Delete
-          </Button>
-        </div>
+        <Selector filteredMails={filteredMails} />
+        
       </div>
       {isLoading ? (
         <div className=" d-flex h-50 justify-content-center align-items-center">
