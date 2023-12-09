@@ -4,15 +4,23 @@ import LoadingSpinner from "../UI/LoadingSpinner";
 import MailListItems from "../Mailbox/MailListItems";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Sent = () => {
   const sentMails = useSelector((state) => state.sentMails.sentMails);
   const isLoading = useSelector((state) => state.mail.isLoading);
-
+  const email = useSelector((state) => state.auth.email);
+  const [filteredMails,setFilteredMails] = useState([]);
   const isDeleteEnabled = sentMails.length === 0;
-  const filteredMails = [...sentMails].filter(
-    (mail) => mail.trashed === true
-  );
+
+  
+  useEffect(()=>{
+    let mails = [...sentMails].filter(
+      (mail) => mail.trashed === true && mail.sender === email
+    );
+    setFilteredMails(mails);
+  },[email,sentMails]);
+
 
   const content = (
     <div className="text-center mt-5">
@@ -39,7 +47,7 @@ const Sent = () => {
         content
       ) : (
         <ListGroup variant="flush" className="">
-          {sentMails.map((mail) => (
+          {sentMails.filter(mail=>mail.sender === email).map((mail) => (
             <MailListItems mail={mail} key={mail.id} />
           ))}
         </ListGroup>

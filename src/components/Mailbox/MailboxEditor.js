@@ -72,6 +72,8 @@ const MailboxEditor = () => {
       console.log(error.message);
     } finally {
       setIsLoading(false);
+      setTimeout(()=>{dispatch(showNotification({ message: null, variant: null }))},1200)
+      
     }
   };
 
